@@ -47,25 +47,26 @@ resource "aws_subnet" "front_subnet" {
     Name = "front_subnet"
   }
 }
-
-resource "aws_subnet" "back_subnet" {
-  vpc_id     = aws_vpc.main-vpc.id
-  cidr_block = var.cidr["back"]
-  #map_public_ip_on_launch = true
-  availability_zone = "us-east-1a"
-  tags = {
-    Name = "back_subnet"
-  }
-}
-
-resource "aws_subnet" "services_subnet" {
-  vpc_id            = aws_vpc.main-vpc.id
-  cidr_block        = var.cidr["services"]
-  availability_zone = "us-east-1a"
-  tags = {
-    Name = "services_subnet"
-  }
-}
+//
+# resource "aws_subnet" "back_subnet" {
+#   vpc_id     = aws_vpc.main-vpc.id
+#   cidr_block = var.cidr["back"]
+#   #map_public_ip_on_launch = true
+#   availability_zone = "us-east-1a"
+#   tags = {
+#     Name = "back_subnet"
+#   }
+# }
+#
+# resource "aws_subnet" "services_subnet" {
+#   vpc_id            = aws_vpc.main-vpc.id
+#   cidr_block        = var.cidr["services"]
+#   availability_zone = "us-east-1a"
+#   tags = {
+#     Name = "services_subnet"
+#   }
+# }
+//
 ################################################################################
 ## Provides a resource to create a VPC Internet Gateway
 ## vpc_id - (Required) The VPC ID to create in
@@ -82,23 +83,24 @@ resource "aws_internet_gateway" "gw" {
 ## https://www.terraform.io/docs/providers/aws/r/nat_gateway.html
 ##
 ################################################################################
-
-resource "aws_eip" "nat" {
-  #instance   = "${aws_instance.back.id}"
-  vpc        = true
-  depends_on = ["aws_internet_gateway.gw"]
-}
-
-
-resource "aws_nat_gateway" "aws_nat_gateway" {
-  allocation_id = "${aws_eip.nat.id}"
-  subnet_id     = "${aws_subnet.back_subnet.id}"
-  depends_on    = ["aws_internet_gateway.gw"]
-
-  tags = {
-    Name = "aws_nat_gateway"
-  }
-}
+//
+# resource "aws_eip" "nat" {
+#   #instance   = "${aws_instance.back.id}"
+#   vpc        = true
+#   depends_on = ["aws_internet_gateway.gw"]
+# }
+#
+#
+# resource "aws_nat_gateway" "aws_nat_gateway" {
+#   allocation_id = "${aws_eip.nat.id}"
+#   subnet_id     = "${aws_subnet.back_subnet.id}"
+#   depends_on    = ["aws_internet_gateway.gw"]
+#
+#   tags = {
+#     Name = "aws_nat_gateway"
+#   }
+# }
+//
 #
 ################################################################################
 ##
@@ -108,14 +110,17 @@ resource "aws_nat_gateway" "aws_nat_gateway" {
 ##   https://www.terraform.io/docs/providers/aws/r/route_table.html
 ##
 ################################################################################
-resource "aws_route_table" "private_subnet_rt" {
-  vpc_id = "${aws_vpc.main-vpc.id}"
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
-  }
-}
+//
+# resource "aws_route_table" "private_subnet_rt" {
+#   vpc_id = "${aws_vpc.main-vpc.id}"
+#
+#   route {
+#     cidr_block = "0.0.0.0/0"
+#     gateway_id = "${aws_internet_gateway.gw.id}"
+#   }
+# }
+//
 
 # resource "aws_route_table" "public_subnet_rt" {
 #   vpc_id = "${aws_vpc.main-vpc.id}"
@@ -136,12 +141,12 @@ resource "aws_route_table" "private_subnet_rt" {
 #   subnet_id      = "${aws_subnet.front_subnet.id}"
 #   route_table_id = "${aws_route_table.public_subnet_rt.id}"
 # }
-
-resource "aws_route_table_association" "rta_private_subnet" {
-  subnet_id      = "${aws_subnet.front_subnet.id}"
-  route_table_id = "${aws_route_table.private_subnet_rt.id}"
-}
-
+//
+# resource "aws_route_table_association" "rta_private_subnet" {
+#   subnet_id      = "${aws_subnet.front_subnet.id}"
+#   route_table_id = "${aws_route_table.private_subnet_rt.id}"
+# }
+//
 
 ################################################################################
 ##
@@ -205,49 +210,51 @@ resource "aws_security_group" "front" {
     Name = "front_acces"
   }
 }
-resource "aws_security_group" "access_via_nat" {
-  name        = "Access via nat"
-  description = "Access to nat instance"
-  vpc_id      = "${aws_vpc.main-vpc.id}"
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "Nat access"
-  }
-}
-resource "aws_security_group" "services" {
-  name        = "services_sg"
-  description = "Access"
-  vpc_id      = "${aws_vpc.main-vpc.id}"
-
-  ingress {
-    from_port   = 7
-    to_port     = 7
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 7
-    to_port     = 7
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "ICMP"
-  }
-}
+# //
+# resource "aws_security_group" "access_via_nat" {
+#   name        = "Access via nat"
+#   description = "Access to nat instance"
+#   vpc_id      = "${aws_vpc.main-vpc.id}"
+#
+#   ingress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   tags = {
+#     Name = "Nat access"
+#   }
+# }
+# resource "aws_security_group" "services" {
+#   name        = "services_sg"
+#   description = "Access"
+#   vpc_id      = "${aws_vpc.main-vpc.id}"
+#
+#   ingress {
+#     from_port   = 7
+#     to_port     = 7
+#     protocol    = "icmp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   egress {
+#     from_port   = 7
+#     to_port     = 7
+#     protocol    = "icmp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   tags = {
+#     Name = "ICMP"
+#   }
+# }
+//
 # next one's need to use in this task:
 #  https://www.terraform.io/docs/providers/aws/r/network_acl.html
 #  https://www.terraform.io/docs/providers/aws/r/network_acl_rule.html
@@ -261,14 +268,14 @@ resource "aws_security_group" "services" {
 ##
 ## Create aws_instanse for "front"
 ##
-##########################################   ######################################
+################################################################################
 resource "aws_instance" "front" {
   ami                    = var.ami
   instance_type          = var.instance_type
   tags                   = { name = "frontend" }
   subnet_id              = "${aws_subnet.front_subnet.id}"
   vpc_security_group_ids = [aws_security_group.front.id] #Берем айди секюрити групы после ее создания
-  user_data              = file("install_httpd.sh")
+  user_data              = file("install_httpd.sh")      # pedal new script for chef client and filebeat
   key_name               = "ssh"
 }
 ################################################################################
@@ -279,25 +286,27 @@ resource "aws_instance" "front" {
 ##
 ##   Backend instance
 ##
-resource "aws_instance" "back" {
-  ami                    = var.ami
-  instance_type          = var.instance_type
-  tags                   = { name = "back" }
-  user_data              = "ping 8.8.8.8"
-  subnet_id              = "${aws_subnet.back_subnet.id}"
-  vpc_security_group_ids = [aws_security_group.access_via_nat.id]
-  key_name               = "ssh"
-}
-##
-##
-##
-resource "aws_instance" "services" {
-  ami                    = var.ami
-  instance_type          = var.instance_type
-  tags                   = { name = "services" }
-  user_data              = "ping 8.8.8.8"
-  subnet_id              = "${aws_subnet.services_subnet.id}"
-  vpc_security_group_ids = [aws_security_group.services.id]
-  key_name               = "ssh"
-
-}
+//
+# resource "aws_instance" "back" {
+#   ami                    = var.ami
+#   instance_type          = var.instance_type
+#   tags                   = { name = "back" }
+#   user_data              = "ping 8.8.8.8"
+#   subnet_id              = "${aws_subnet.back_subnet.id}"
+#   vpc_security_group_ids = [aws_security_group.access_via_nat.id]
+#   key_name               = "ssh"
+# }
+# ##
+# ##
+# ##
+# resource "aws_instance" "services" {
+#   ami                    = var.ami
+#   instance_type          = var.instance_type
+#   tags                   = { name = "services" }
+#   user_data              = "ping 8.8.8.8"
+#   subnet_id              = "${aws_subnet.services_subnet.id}"
+#   vpc_security_group_ids = [aws_security_group.services.id]
+#   key_name               = "ssh"
+#
+# }
+//
