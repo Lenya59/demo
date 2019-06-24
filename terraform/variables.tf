@@ -3,32 +3,22 @@
 variable "access_key" {}
 variable "secret_key" {}
 
-
 #string type
 variable "ami" {
   type    = "string"
-  default = "ami-098bb5d92c8886ca1"
+  default = "ami-079596bf7a949ddf8"
 }
 variable "region" {
   type    = "string"
-  default = "us-west-1"
+  default = "us-west-2"
 }
 variable "instance_type" {
   type    = "string"
   default = "t2.micro"
 }
-################################################################################
-# list type
-# https://www.terraform.io/docs/configuration-0-11/variables.html
-#
-#
-################################################################################
+
 variable "amis_tags" { default = ["back", "service"] }
-################################################################################
-# map type
-#
-# smthng  = var.cidr["main"]
-################################################################################
+
 variable "cidr" {
   type = "map"
   default = {
@@ -40,38 +30,3 @@ variable "cidr" {
 
   }
 }
-
-variable "server_port" {
-  description = "The port the server will use for HTTP requests"
-  default     = 8080
-}
-
-# variable "name"
-# variable "shape" { type = "string" }
-# variable "vms_list" { type = "list" }
-#
-#
-#
-#      https://www.terraform.io/docs/configuration/variables.html
-#
-#
-#
-#
-#
-#
-#
-#  terraform apply -auto-approve
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
