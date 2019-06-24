@@ -6,11 +6,11 @@ variable "secret_key" {}
 #string type
 variable "ami" {
   type    = "string"
-  default = "ami-079596bf7a949ddf8"
+  default = "ami-098bb5d92c8886ca1"
 }
 variable "region" {
   type    = "string"
-  default = "us-west-2"
+  default = "us-east-1"
 }
 variable "instance_type" {
   type    = "string"

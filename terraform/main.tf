@@ -27,9 +27,8 @@ resource "aws_subnet" "front_subnet" {
   vpc_id                  = aws_vpc.main-vpc.id
   cidr_block              = var.cidr["front"]
   map_public_ip_on_launch = true
-  availability_zone       = "us-west-2a"
+  availability_zone       = "us-east-1a"
   depends_on              = ["aws_internet_gateway.gw"]
-
   tags = {
     Name = "front_subnet"
   }
