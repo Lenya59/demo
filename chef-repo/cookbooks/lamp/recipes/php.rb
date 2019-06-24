@@ -1,57 +1,36 @@
-#
-# Cookbook:: lamp
-# Recipe:: php
-#
-# Copyright:: 2019, The Authors, All Rights Reserved.
-# Install PHP and its modules
-#package 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
-#package 'http://rpms.remirepo.net/enterprise/remi-release-7.rpm'
-#execute 'php_version' do
-#  command 'yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm'
-#  ignore_failure true
-#end
+epelrepo = '/home/epel.rpm'
+remirepo = '/home/remi.rpm'
 
-#execute 'php_version' do
-#  command 'yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
-#  ignore_failure true
-#end
+action :install do
 
-#execute 'php_version' do
-#  command 'yum install yum-utils'
-#  ignore_failure true
-#end
+  remote_file epelrepo do
+    source 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+    owner 'root'
+    group 'root'
+    mode '0755'
+  end
 
-#yum_repository 'remi-php56' do
-#    mirrorlist 'http://rpms.remirepo.net/enterprise/6/remi/mirror'
-#    description "Remi's PHP 5.6 RPM repository for Enterprise Linux 5 - $basearch"
-#    enabled true
-#    gpgcheck true
-#    gpgkey 'http://rpms.remirepo.net/RPM-GPG-KEY-remi'
-#  end
+  remote_file remirepo do
+    source 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
+    owner 'root'
+    group 'root'
+    mode '0755'
+  end
 
-#  yum_repository 'epel' do
-#      mirrorlist 'http://mirrors.fedoraproject.org/mirrorlist?repo=epel-5&arch=$basearch'
-#      description 'Extra Packages for Enterprise Linux 5 - $basearch'
-#      enabled true
-#      gpgcheck true
-#      gpgkey 'http://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL'
-#    end
-
-
-package 'yum-utils' do
-  action :install
-end
-
-execute 'php_version' do
-  command 'yum-config-manager --enable remi-php56.repo '
-  ignore_failure true
-end
-
-
-%w{php php-fpm php-mysql php-xmlrpc php-gd php-pear php-pspell}.each do |pkg|
-  package pkg do
-    flush_cache before: true
+  package epelrepo do
     action :install
-    notifies :reload, 'service[httpd]', :immediately
+  end
+
+  package remirepo do
+    action :install
+  end
+
+  execute 'set php version to 73' do
+    command 'sudo yum-config-manager --enable remi-php73'
+    action :run
+  end
+
+  package %w(php php-mysql php-devel php-gd php-pecl-memcache php-pspell php-snmp php-xmlrpc php-xml) do
+    action :install
   end
 end

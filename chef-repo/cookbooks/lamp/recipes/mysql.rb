@@ -1,10 +1,3 @@
-#
-# Cookbook:: lamp
-# Recipe:: mysql
-#
-# Copyright:: 2019, The Authors, All Rights Reserved.
-# Install MySQL client and server<strong>
-
   package 'mariadb-server' do
     action :install
   end

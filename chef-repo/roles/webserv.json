@@ -11,10 +11,9 @@
   "chef_type": "role",
   "run_list": [
     "recipe[lamp::apache]",
-    "recipe[yum-epel::default]",
-    "recipe[yum-remi-chef::remi-php56]",
     "recipe[lamp::php]",
-    "recipe[lamp::download]"
+    "recipe[lamp::download]",
+    "recipe[lamp::mysql]"
   ],
   "env_run_lists": {
 
