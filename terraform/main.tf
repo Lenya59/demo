@@ -29,17 +29,17 @@ resource "aws_subnet" "front_subnet" {
 }
 
 resource "aws_route_table" "front_subnet_rt" {
-  vpc_id = "${aws_vpc.main-vpc.id}"
+  vpc_id = aws_vpc.main-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
+    gateway_id = aws_internet_gateway.gw.id
   }
 }
 
 resource "aws_route_table_association" "rta_front_subnet" {
-  subnet_id      = "${aws_subnet.front_subnet.id}"
-  route_table_id = "${aws_route_table.front_subnet_rt.id}"
+  subnet_id      = aws_subnet.front_subnet.id
+  route_table_id = aws_route_table.front_subnet_rt.id
 }
 
 resource "aws_security_group" "front" {
@@ -72,6 +72,6 @@ resource "aws_instance" "front" {
   tags                   = { name = "frontend" }
   subnet_id              = aws_subnet.front_subnet.id
   vpc_security_group_ids = [aws_security_group.front.id]
-  user_data              = file("install_httpd.sh") # pedal new script for chef client and filebeat
+  user_data              = file("install_chef-client.sh") # pedal new script for chef client and filebeat
   key_name               = "ssh"
 }
