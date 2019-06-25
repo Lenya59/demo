@@ -1,24 +1,19 @@
-#
-# Cookbook:: lamp
-# Recipe:: php
-#
-# Copyright:: 2019, The Authors, All Rights Reserved.
-epelrepo = '/home/epel.rpm'
-remirepo = '/home/remi.rpm'
+epelrepo = '/home/ec2-user/epel.rpm'
+remirepo = '/home/ec2-user/remi.rpm'
 
 action :install do
 
   remote_file epelrepo do
     source 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
-    owner 'vagrant'
-    group 'vagrant'
+    owner 'ec2-user'
+    group 'ec2-user'
     mode '0755'
   end
 
   remote_file remirepo do
     source 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
-    owner 'vagrant'
-    group 'vagrant'
+    owner 'ec2-user'
+    group 'ec2-user'
     mode '0755'
   end
 
