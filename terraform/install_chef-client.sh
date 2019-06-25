@@ -4,11 +4,10 @@ curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -v 14.4.56
 chef-client -v
 # Keys
 sudo mkdir /home/.chef
-sudo cp /vagrant
 
-# Keys copy
-sudo cp /vagrant/vagrant.pem /home/vagrant/.chef
-sudo cp /vagrant/hashi.pem /home/vagrant/.chef
+sudo cp /vagrant/vagrant.pem /home/.chef
+
+sudo cp ekovt.pem /home/.chef
 # create a client.rb
 sudo touch /home/.chef/client.rb
 sudo bash -c "cat <<EOF > /home/vagrant/.chef/client.rb
@@ -24,8 +23,6 @@ EOF"
 knife ssl fetch -c /home/.chef/client.rb
 
 knife ssl check -c /home/.chef/client.rb
-
-
 
 
 
