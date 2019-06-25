@@ -28,7 +28,7 @@ resource "aws_subnet" "front_subnet" {
   }
 }
 
-resource "aws_route_table" "private_subnet_rt" {
+resource "aws_route_table" "front_subnet_rt" {
   vpc_id = "${aws_vpc.main-vpc.id}"
 
   route {
@@ -37,9 +37,9 @@ resource "aws_route_table" "private_subnet_rt" {
   }
 }
 
-resource "aws_route_table_association" "rta_private_subnet" {
+resource "aws_route_table_association" "rta_front_subnet" {
   subnet_id      = "${aws_subnet.front_subnet.id}"
-  route_table_id = "${aws_route_table.private_subnet_rt.id}"
+  route_table_id = "${aws_route_table.front_subnet_rt.id}"
 }
 
 resource "aws_security_group" "front" {
