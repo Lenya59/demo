@@ -72,6 +72,6 @@ resource "aws_instance" "front" {
   tags                   = { name = "frontend" }
   subnet_id              = aws_subnet.front_subnet.id
   vpc_security_group_ids = [aws_security_group.front.id]
-  user_data              = file("install_chef-client.sh") # pedal new script for chef client and filebeat
+  user_data              = file("install_chef-client.sh")
   key_name               = "ssh"
 }

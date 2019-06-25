@@ -1,16 +1,16 @@
 #
 # Cookbook:: lamp
-# Recipe:: mysql
+# Recipe:: mysqlcent
 #
 # Copyright:: 2019, The Authors, All Rights Reserved.
-# Install MySQL client and server<strong>
-
-  package 'mariadb-server' do
+%w{mariadb mariadb-server}.each do |pkg|
+  package pkg do
     action :install
   end
+end
 
 # Enable start on boot and start the MySQL server
-service 'mysql.service' do
+service 'mariadb' do
   action [:enable, :start]
 end
 

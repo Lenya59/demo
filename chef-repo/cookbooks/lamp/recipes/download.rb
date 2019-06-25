@@ -1,3 +1,8 @@
+#
+# Cookbook:: lamp
+# Recipe:: download
+#
+# Copyright:: 2019, The Authors, All Rights Reserved.
 ruby_block "download_wordpress" do
   block do
     require 'fileutils'

@@ -1,3 +1,8 @@
+#
+# Cookbook:: lamp
+# Recipe:: php
+#
+# Copyright:: 2019, The Authors, All Rights Reserved.
 epelrepo = '/home/epel.rpm'
 remirepo = '/home/remi.rpm'
 
@@ -5,15 +10,15 @@ action :install do
 
   remote_file epelrepo do
     source 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
-    owner 'root'
-    group 'root'
+    owner 'vagrant'
+    group 'vagrant'
     mode '0755'
   end
 
   remote_file remirepo do
     source 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
-    owner 'root'
-    group 'root'
+    owner 'vagrant'
+    group 'vagrant'
     mode '0755'
   end
 
@@ -30,7 +35,11 @@ action :install do
     action :run
   end
 
-  package %w(php php-mysql php-devel php-gd php-pecl-memcache php-pspell php-snmp php-xmlrpc php-xml) do
+
+%w{php php-fpm php-mysql php-xmlrpc php-gd php-pear php-pspell}.each do |pkg|
+  package pkg do
+    flush_cache before: true
     action :install
+    notifies :reload, 'service[httpd]', :immediately
   end
 end

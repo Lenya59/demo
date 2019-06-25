@@ -1,0 +1,7 @@
+
+
+
+ssh -i "ssh.pem" ec2-user@ec2-34-239-152-211.compute-1.amazonaws.com
+
+
+knife bootstrap 34.239.152.211  -N ip-10-20-1-221.ec2.internal -x ec2-user --sudo --run-list "recipe[webserv]"
