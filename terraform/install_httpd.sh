@@ -15,3 +15,9 @@ echo "<h1>Welcome to DevOps_ITA_demo</h1>" | sudo tee /var/www/html/index.html
 # hostname=$(hostname)
 #
 # chef-client --chef-license accept
+# cp -R /vagrant/chef-repo/ ./
+# cd ./chef-repo/
+#
+# chef-client --chef-license accept
+#
+# knife bootstrap --y $ipaddr --connect-user vagrant --sudo --ssh-identity-file /vagrant/.vagrant/machines/$hostname/virtualbox/private_key --node-name $hostname$((RANDOM%100)) -r 'role[webserv]'

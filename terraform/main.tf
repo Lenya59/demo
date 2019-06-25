@@ -4,16 +4,6 @@ provider "aws" {
   region     = var.region
 }
 
-resource "aws_instance" "front" {
-  ami                    = var.ami
-  instance_type          = var.instance_type
-  tags                   = { name = "frontend" }
-  subnet_id              = aws_subnet.front_subnet.id
-  vpc_security_group_ids = [aws_security_group.front.id]
-  user_data              = file("install_httpd.sh") # pedal new script for chef client and filebeat
-  key_name               = "ssh"
-}
-
 resource "aws_vpc" "main-vpc" {
   cidr_block           = var.cidr["main"]
   enable_dns_hostnames = true
@@ -23,31 +13,39 @@ resource "aws_vpc" "main-vpc" {
   }
 }
 
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main-vpc.id
+}
+
 resource "aws_subnet" "front_subnet" {
   vpc_id                  = aws_vpc.main-vpc.id
   cidr_block              = var.cidr["front"]
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1a"
-  depends_on              = ["aws_internet_gateway.gw"]
+  #availability_zone       = "us-east-1a"
+  depends_on = ["aws_internet_gateway.gw"]
   tags = {
     Name = "front_subnet"
   }
 }
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main-vpc.id
+resource "aws_route_table" "private_subnet_rt" {
+  vpc_id = "${aws_vpc.main-vpc.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.gw.id}"
+  }
 }
 
-# resource "aws_eip" "nat" {
-#   instance   = aws_instance.front.id
-#   vpc        = true
-#   depends_on = ["aws_internet_gateway.gw"]
-# }
+resource "aws_route_table_association" "rta_private_subnet" {
+  subnet_id      = "${aws_subnet.front_subnet.id}"
+  route_table_id = "${aws_route_table.private_subnet_rt.id}"
+}
 
 resource "aws_security_group" "front" {
   name        = "Apache Security Group"
   description = "Allow Https port inbound traffic"
-  vpc_id      = aws_vpc.main-vpc.id #будем цеплять впс
+  vpc_id      = aws_vpc.main-vpc.id
   dynamic "ingress" {
     for_each = ["443", "80", "22"]
     content {
@@ -57,13 +55,23 @@ resource "aws_security_group" "front" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
-  egress { # Входящий
+  egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"          # Любой протокол ТСР и UDP
-    cidr_blocks = ["0.0.0.0/0"] # Разрешаем ходить с инета
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
     Name = "front_acces"
   }
+}
+
+resource "aws_instance" "front" {
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  tags                   = { name = "frontend" }
+  subnet_id              = aws_subnet.front_subnet.id
+  vpc_security_group_ids = [aws_security_group.front.id]
+  user_data              = file("install_httpd.sh") # pedal new script for chef client and filebeat
+  key_name               = "ssh"
 }
