@@ -6,7 +6,7 @@ variable "secret_key" {}
 #string type
 variable "ami" {
   type    = "string"
-  default = "ami-098bb5d92c8886ca1"
+  default = "ami-004b66801cc40a839"
 }
 variable "region" {
   type    = "string"
@@ -16,8 +16,6 @@ variable "instance_type" {
   type    = "string"
   default = "t2.micro"
 }
-
-variable "amis_tags" { default = ["back", "service"] }
 
 variable "cidr" {
   type = "map"

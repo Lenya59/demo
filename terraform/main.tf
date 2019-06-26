@@ -74,4 +74,17 @@ resource "aws_instance" "front" {
   vpc_security_group_ids = [aws_security_group.front.id]
   user_data              = file("install_chef-client.sh")
   key_name               = "ssh"
+  provisioner "file" {
+    source      = "F:/Task/demo/chef-repo"
+    destination = "/home/centos/chef-repo"
+    #destination = "/home/ec2-user/chef-repo"
+  }
+  connection {
+    host = aws_instance.front.public_ip
+    type = "ssh"
+    user = "centos"
+    #user        = "ec2-user"
+    password    = ""
+    private_key = "${file("ssh.pem")}"
+  }
 }
